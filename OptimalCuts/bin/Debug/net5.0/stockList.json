@@ -1,0 +1,20 @@
+{
+  "quantity": 3,
+  "stocks": [
+    {
+      "length": 72,
+      "width": 4,
+      "quantity": 4
+    },
+    {
+      "length": 80,
+      "width": 4,
+      "quantity": 3
+    },
+    {
+      "length": 108,
+      "width": 4,
+      "quantity": 2
+    }
+  ]
+}
