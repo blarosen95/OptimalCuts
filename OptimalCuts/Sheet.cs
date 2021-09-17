@@ -17,6 +17,11 @@ namespace OptimalCuts
             _quantity = quantity;
         }
 
+        public double fitFactor(Piece p)
+        {
+            
+        }
+
         public void Deconstruct(out double length, out double width, out int quantity)
         {
             length = _length;
