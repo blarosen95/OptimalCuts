@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
+using OptimalCuts.extensions;
 
 namespace OptimalCuts
 {
@@ -8,48 +10,74 @@ namespace OptimalCuts
     {
         static void Main(string[] args)
         {
-            using var stockList = new StreamReader("stockList.json");
-            var stockContent = stockList.ReadToEnd();
-            dynamic stockJson = JObject.Parse(stockContent);
+            Settings settings = new Settings();
+            settings.SetSheetSize(108.0, 8.0);
+            // settings.SetSheetSize(10008.0, 8.0);
 
-            Sheet[] sheets = new Sheet[stockJson.quantity];
 
-            for (int i = 0; i < sheets.Length; i++)
+            FirstOptimizer firstOptimizer = new FirstOptimizer();
+            firstOptimizer.Setup(settings);
+
+            firstOptimizer.AddPiece(17.0, 4);
+            firstOptimizer.AddPiece(20.0, 4);
+            firstOptimizer.AddPiece(17.0, 4);
+            firstOptimizer.AddPiece(17.0, 4);
+            firstOptimizer.AddPiece(20.0, 4);
+            firstOptimizer.AddPiece(17.0, 4);
+            
+            CuttingResult cuttingResult = firstOptimizer.Calc();
+
+            Panel[] panels = cuttingResult.GetSheet(0).GetPanels();
+
+            // TODO: The following only works with single sheet quantities (which is the current state of progress for this program too)
+            // foreach (var panel in panels)
+            panels.Each((panel, i) =>
             {
-                // TODO: Move the ToObject<type> calls into the constructor (replacing with TryParse too).
-                // TODO: No longer using .Parse methods, TryParse no longer appropriate. Use other validations!
-                sheets[i] = new Sheet(stockJson.stocks[i].length.ToObject<double>(),
-                    stockJson.stocks[i].width.ToObject<double>(),
-                    stockJson.stocks[i].quantity.ToObject<int>(),
-                    i);
-            }
+                Console.WriteLine(panel);
 
-            using var panelList = new StreamReader("panelList.json");
-            var panelContent = panelList.ReadToEnd();
-            dynamic panelJson = JObject.Parse(panelContent);
+                Console.WriteLine();
 
-            Panel[] panels = new Panel[panelJson.quantity];
+                // First, if this is a waste piece, let the user know:
+                // TODO: The current concept of waste is limited... Once more than one sheet is possible, FIXME.
+                Console.WriteLine(i == firstOptimizer.GetNumPieces()
+                    ? $"Reached waste-piece at Panel #{i + 1}"
+                    : $"For Panel #{i + 1}:");
 
-            for (int i = 0; i < panels.Length; i++)
-            {
-                panels[i] = new Panel(panelJson.panels[i].length.ToObject<double>(),
-                    panelJson.panels[i].width.ToObject<double>(), panelJson.panels[i].quantity.ToObject<int>(),
-                    panelJson.panels[i].canTurn.ToObject<bool>(),
-                    i);
-            }
+                // Ensure that crosscut is needed:
+                if (Math.Abs(panel._y2 - panel._y1) > 0.0f)
+                {
+                    Console.WriteLine(
+                        $"Mark remaining Sheet for a crosscut at {panel._y2 - panel._y1} units along the length.");
 
-            Console.WriteLine("From a stock of {");
-            foreach (var sheet in sheets) Console.WriteLine(sheet);
-            Console.WriteLine("}");
+                    Console.WriteLine($"Make the previously mentioned crosscut.");
+                }
 
-            Console.WriteLine("User wants cuts to result in {");
-            foreach (var panel in panels) Console.WriteLine(panel);
-            Console.WriteLine("}");
+                // Determine if rip-cut is needed:
+                if (Math.Abs(panel._x2 - panel._x1) > 0.0f)
+                {
+                    Console.WriteLine($"Mark cut-off for a rip cut at {panel._x2 - panel._x1} units across the width.");
+
+                    Console.WriteLine($"Make the previously mentioned rip cut.");
+                }
+            });
+
+            // Console.WriteLine($"Sheets: {firstOptimizer.GetNumPieces()}");
+            string sheetVisA = "------------------------------------------------";
+            string sheetVisB = "|                                              |";
+            string sheetVisC = "|                                              |";
+            string sheetVisD = "------------------------------------------------";
+
+            string sheetVis = @"------------------------------------------------
+|                                              |
+|                                              |
+------------------------------------------------";
 
 
-            SheetCutter sheetCutter = new SheetCutter(sheets, panels);
-            sheetCutter.SetBasicStructure();
+            Console.WriteLine($"{sheetVis}");
+            
+            
 
+            // Console.WriteLine($"{string.Concat(Enumerable.Repeat("-"))}");
         }
     }
 }

@@ -27,6 +27,7 @@ namespace OptimalCuts.Tree
                 return 0;
             }
 
+            // FIXME: Equality comparison of floating point numbers.
             if (availableWidth == p._width && availableLength == p._length)
             {
                 return Double.MaxValue;

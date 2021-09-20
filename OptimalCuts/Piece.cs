@@ -44,7 +44,6 @@ namespace OptimalCuts
 
             if (GetType() != obj.GetType())
             {
-                Console.WriteLine("Oops?");
                 return false;
             }
 

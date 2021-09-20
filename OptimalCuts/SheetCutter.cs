@@ -6,6 +6,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace OptimalCuts
 {
+    /*
     public class SheetCutter
     {
         private Sheet[] _sheets;
@@ -62,11 +63,12 @@ namespace OptimalCuts
         public void SetOptimalCutListLinear()
         {
             Console.WriteLine("TODO");
-            /*
-             * TODO: Loop on each Sheet first
-             *  Each time a panel fits the length:
-             *      subtract that length from the sheet (remembering which quantity number it was cut from)...
-            */
+           // 
+           //   TODO: Loop on each Sheet first
+           //    Each time a panel fits the length:
+           //        subtract that length from the sheet (remembering which quantity number it was cut from)...
+           //
         }
     }
+    */
 }
