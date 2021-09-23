@@ -11,21 +11,61 @@ namespace OptimalCuts
         static void Main(string[] args)
         {
             Settings settings = new Settings();
-            settings.SetSheetSize(108.0, 8.0);
+            // settings.SetSheetSize(108.0, 8.0);
             // settings.SetSheetSize(10008.0, 8.0);
 
 
-            FirstOptimizer firstOptimizer = new FirstOptimizer();
-            firstOptimizer.Setup(settings);
+            // FirstOptimizer firstOptimizer = new FirstOptimizer();
+            // firstOptimizer.Setup(settings);
 
-            firstOptimizer.AddPiece(17.0, 4);
-            firstOptimizer.AddPiece(20.0, 4);
-            firstOptimizer.AddPiece(17.0, 4);
-            firstOptimizer.AddPiece(17.0, 4);
-            firstOptimizer.AddPiece(20.0, 4);
-            firstOptimizer.AddPiece(17.0, 4);
+            // firstOptimizer.AddPiece(17.0, 4);
+            // firstOptimizer.AddPiece(20.0, 4);
+            // firstOptimizer.AddPiece(17.0, 4);
+            // firstOptimizer.AddPiece(17.0, 4);
+            // firstOptimizer.AddPiece(20.0, 4);
+            // firstOptimizer.AddPiece(17.0, 4);
+
+            SecondOptimizer secondOptimizer = new SecondOptimizer();
+            secondOptimizer.AddSetting(72, 4);
+            secondOptimizer.AddSetting(72, 4);
+            secondOptimizer.AddSetting(72, 4);
+            secondOptimizer.AddSetting(80, 4);
+            secondOptimizer.AddSetting(80, 4);
+            secondOptimizer.AddSetting(108, 4);
+            secondOptimizer.AddSetting(108, 4);
             
-            CuttingResult cuttingResult = firstOptimizer.Calc();
+            secondOptimizer.AddPiece(8, 4);
+            secondOptimizer.AddPiece(8, 4);
+            secondOptimizer.AddPiece(8, 4);
+            secondOptimizer.AddPiece(8, 4);
+            
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            secondOptimizer.AddPiece(20, 4);
+            
+            secondOptimizer.AddPiece(48, 4);
+            secondOptimizer.AddPiece(48, 4);
+            
+            secondOptimizer.AddPiece(33, 4);
+            secondOptimizer.AddPiece(33, 4);
+            secondOptimizer.AddPiece(33, 4);
+            secondOptimizer.AddPiece(33, 4);
+            
+            secondOptimizer.AddPiece(17, 4);
+            secondOptimizer.AddPiece(17, 4);
+            secondOptimizer.AddPiece(17, 4);
+            secondOptimizer.AddPiece(17, 4);
+            
+            secondOptimizer.AddPiece(44, 4);
+            secondOptimizer.AddPiece(44, 4);
+            
+            // CuttingResult cuttingResult = firstOptimizer.Calc();
+            CuttingResult cuttingResult = secondOptimizer.Calc();
 
             Panel[] panels = cuttingResult.GetSheet(0).GetPanels();
 
@@ -39,7 +79,8 @@ namespace OptimalCuts
 
                 // First, if this is a waste piece, let the user know:
                 // TODO: The current concept of waste is limited... Once more than one sheet is possible, FIXME.
-                Console.WriteLine(i == firstOptimizer.GetNumPieces()
+                // Console.WriteLine(i == firstOptimizer.GetNumPieces()
+                Console.WriteLine(i == secondOptimizer.GetNumPieces()
                     ? $"Reached waste-piece at Panel #{i + 1}"
                     : $"For Panel #{i + 1}:");
 
@@ -62,6 +103,7 @@ namespace OptimalCuts
             });
 
             // Console.WriteLine($"Sheets: {firstOptimizer.GetNumPieces()}");
+            /*
             string sheetVisA = "------------------------------------------------";
             string sheetVisB = "|                                              |";
             string sheetVisC = "|                                              |";
@@ -74,7 +116,7 @@ namespace OptimalCuts
 
 
             Console.WriteLine($"{sheetVis}");
-            
+            */
             
 
             // Console.WriteLine($"{string.Concat(Enumerable.Repeat("-"))}");

@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class Node {
+    +double FitFactor(Piece p)
+    +bool Fits(Piece p)
+    +Node Arrange(Piece p)
+    +Panel[] GetPanels()
+}
+
+class Leaf {
+    +_data: Panel
+    +Leaf(Panel data)
+    +double FitFactor(Piece p)
+    +Node Arrange(Piece p)
+    -Node GetAllPartitions(Panel original, Panel arranged)
+    -AndNode DivideRemainder(Panel original, Panel arranged, int partitionType)
+    +Panel[] GetPanels()
+    +string ToString()
+}
+
+abstract class CompositeNode {
+    +_c1: Node
+    +_c2: Node
+    +CompositeNode(Node c1, Node c2)
+    +double FitFactor(Piece p)
+}
+
+class AndNode {
+    +AndNode(Node c1, Node c2) base
+    +Node Arrange(Piece p)
+    +Panel[] GetPanels()
+    +string ToString()
+}
+
+class OrNode {
+    +OrNode(Node c1, Node c2) base
+    +Node Arrange(Piece p)
+    +Panel[] GetPanels()
+    +string ToString()
+}
+
+Node <|-- Leaf
+Node <|-- CompositeNode
+CompositeNode <|-- AndNode
+CompositeNode <|-- OrNode
+
+@enduml
