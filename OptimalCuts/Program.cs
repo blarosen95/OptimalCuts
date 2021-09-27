@@ -33,12 +33,12 @@ namespace OptimalCuts
             secondOptimizer.AddSetting(80, 4);
             secondOptimizer.AddSetting(108, 4);
             secondOptimizer.AddSetting(108, 4);
-            
+
             secondOptimizer.AddPiece(8, 4);
             secondOptimizer.AddPiece(8, 4);
             secondOptimizer.AddPiece(8, 4);
             secondOptimizer.AddPiece(8, 4);
-            
+
             secondOptimizer.AddPiece(20, 4);
             secondOptimizer.AddPiece(20, 4);
             secondOptimizer.AddPiece(20, 4);
@@ -47,32 +47,38 @@ namespace OptimalCuts
             secondOptimizer.AddPiece(20, 4);
             secondOptimizer.AddPiece(20, 4);
             secondOptimizer.AddPiece(20, 4);
-            
+
             secondOptimizer.AddPiece(48, 4);
             secondOptimizer.AddPiece(48, 4);
-            
+
             secondOptimizer.AddPiece(33, 4);
             secondOptimizer.AddPiece(33, 4);
             secondOptimizer.AddPiece(33, 4);
             secondOptimizer.AddPiece(33, 4);
-            
+
             secondOptimizer.AddPiece(17, 4);
             secondOptimizer.AddPiece(17, 4);
             secondOptimizer.AddPiece(17, 4);
             secondOptimizer.AddPiece(17, 4);
-            
+
             secondOptimizer.AddPiece(44, 4);
             secondOptimizer.AddPiece(44, 4);
-            
+
             // CuttingResult cuttingResult = firstOptimizer.Calc();
-            CuttingResult cuttingResult = secondOptimizer.Calc();
+            // CuttingResult cuttingResult = secondOptimizer.Calc();
+            CuttingResult cuttingResult = secondOptimizer.CalcAlt();
 
             Panel[] panels = cuttingResult.GetSheet(0).GetPanels();
+
+            Console.WriteLine($"First Sheet is {cuttingResult.GetSheet(0)}");
 
             // TODO: The following only works with single sheet quantities (which is the current state of progress for this program too)
             // foreach (var panel in panels)
             panels.Each((panel, i) =>
             {
+                Console.WriteLine();
+                Console.WriteLine();
+
                 Console.WriteLine(panel);
 
                 Console.WriteLine();
@@ -102,6 +108,20 @@ namespace OptimalCuts
                 }
             });
 
+            Console.WriteLine($"Total Settings: {secondOptimizer.GetNumStocks()}.");
+
+            foreach (var notFit in cuttingResult.GetNotFits())
+            {
+                Console.WriteLine($"Could not fit: {notFit}!");
+            }
+            
+            Console.WriteLine($"Total Sheets: {cuttingResult.GetNumSheets()}");
+
+            // foreach (var setting in secondOptimizer.GetSettingsList())
+            // {
+                // Console.WriteLine($"Setting: {setting}");
+            // }
+
             // Console.WriteLine($"Sheets: {firstOptimizer.GetNumPieces()}");
             /*
             string sheetVisA = "------------------------------------------------";
@@ -117,7 +137,7 @@ namespace OptimalCuts
 
             Console.WriteLine($"{sheetVis}");
             */
-            
+
 
             // Console.WriteLine($"{string.Concat(Enumerable.Repeat("-"))}");
         }

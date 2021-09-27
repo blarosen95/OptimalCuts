@@ -9,10 +9,14 @@ namespace OptimalCuts
         private List<Settings> _settingsList;
         private List<Piece> _pieces;
 
+        private int _testIterator;
+
         public SecondOptimizer()
         {
             _pieces = new List<Piece>();
             _settingsList = new List<Settings>();
+
+            _testIterator = 0;
         }
 
         // TODO #1: Refactor Settings as a whole in order to reflect it being "Stock" instead.
@@ -56,19 +60,28 @@ namespace OptimalCuts
             Sheet sheetWithMaximumFactor = null;
 
             // Begin arranging our pieces into the sheet.
-            List<Piece> notFitting = new List<Piece>();
+            List<Piece> notFitting = new List<Piece>(); // TODO: 
 
+            // TODO: Root cause of issue where it only fits for one Setting item, but also has zero notFitting pieces:
+            // We are only able to get inside the sheetWithMaxFactor == null conditionals once, each.
+            // Solutions:
+            // * Look at having a list of sheetWithMaxFactor items.
+            // * This will need to line up (in terms of index and size) with: _settingsList
             foreach (Piece piece in _pieces)
             {
                 foreach (Settings setting in _settingsList)
                 {
+                    // Console.WriteLine($"Current Settings iterator is: {setting} And we are in Piece: {piece}");
                     foreach (Sheet sheet in sheets)
                     {
+                        // Console.WriteLine($"Current Sheets iterator is: {sheet}");
                         double factor = sheet.FitFactor(piece);
+                        // Console.WriteLine($"Factor is now: {factor}.");
 
                         if (sheetWithMaximumFactor == null || factor > maximumFactor)
                         {
                             maximumFactor = factor;
+                            Console.WriteLine($"Maximum Factor is now: {maximumFactor}");
                             sheetWithMaximumFactor = sheet;
                         }
                     }
@@ -81,11 +94,14 @@ namespace OptimalCuts
                         {
                             // TODO: the following line requires we are efficiently going through the sheets in our list of settings
                             // sheetWithMaximumFactor = new Sheet(_settingsList);
-                            sheetWithMaximumFactor = new Sheet(setting);
+                            Console.WriteLine($"Sheet fits setting piece!");
+                            sheetWithMaximumFactor =
+                                new Sheet(setting); // TODO: We should move to next Setting here I think
                             sheets.Add(sheetWithMaximumFactor);
                         }
                         else
                         {
+                            Console.WriteLine($"Adding Piece: {piece} to notFitting!");
                             notFitting.Add(piece);
                             continue;
                         }
@@ -132,6 +148,82 @@ namespace OptimalCuts
                     }
                 }
             }
+        }
+
+        public CuttingResult CalcAlt()
+        {
+            // Sort array, descending
+            // _pieces.Sort();
+            _pieces.Sort(new PieceSizeComparer(true));
+            // _pieces.Sort(new PieceSizeComparer(false));
+            // TODO: Ensure the list was just sorted in the fashion I'm expecting.
+
+            List<Sheet> sheets = new List<Sheet>();
+
+            double maximumFactor = 0;
+
+            Sheet sheetWithMaximumFactor = null;
+
+            // Begin arranging our pieces into the sheet.
+            List<Piece> notFitting = new List<Piece>(); // TODO: 
+
+            // TODO: Root cause of issue where it only fits for one Setting item, but also has zero notFitting pieces:
+            // We are only able to get inside the sheetWithMaxFactor == null conditionals once, each.
+            // Solutions:
+            // * Look at having a list of sheetWithMaxFactor items.
+            // * This will need to line up (in terms of index and size) with: _settingsList
+            foreach (var setting in _settingsList)
+            {
+                foreach (Piece piece in _pieces)
+                {
+                    // foreach (Settings setting in _settingsList)
+                    // {
+                    foreach (Sheet sheet in sheets)
+                    {
+                        // Console.WriteLine($"Current Sheets iterator is: {sheet}");
+                        double factor = sheet.FitFactor(piece);
+                        // Console.WriteLine($"Factor is now: {factor}.");
+
+                        if (sheetWithMaximumFactor == null || factor > maximumFactor)
+                        {
+                            maximumFactor = factor;
+                            // Console.WriteLine($"Maximum Factor is now: {maximumFactor}");
+                            sheetWithMaximumFactor = sheet;
+                        }
+                    }
+
+                    if (sheetWithMaximumFactor == null)
+                    {
+                        // TODO: the following line requires we are efficiently going through the sheets in our list of settings
+                        // if (Sheet.Fits(_settingsList, piece))
+                        if (Sheet.Fits(setting, piece))
+                        {
+                            // TODO: the following line requires we are efficiently going through the sheets in our list of settings
+                            // sheetWithMaximumFactor = new Sheet(_settingsList);
+                            Console.WriteLine($"Sheet fits setting piece!");
+                            sheetWithMaximumFactor =
+                                new Sheet(setting); // TODO: We should move to next Setting here I think
+                            sheets.Add(sheetWithMaximumFactor);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Adding Piece: {piece} to notFitting!");
+                            notFitting.Add(piece);
+                            continue;
+                        }
+                    }
+
+                    sheetWithMaximumFactor.Arrange(piece);
+                    // TODO: Following line is for debug purposes.
+                    CheckResult(sheets);
+                }
+
+                // Ending this iteration of the foreach loop against _settingsList. As such, track it:
+                _testIterator++;
+                Console.WriteLine($"Iteration now at: {_testIterator}");
+            }
+
+            return new CuttingResult(sheets, notFitting);
         }
     }
 }

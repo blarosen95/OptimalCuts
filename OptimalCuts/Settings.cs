@@ -20,5 +20,10 @@ namespace OptimalCuts
         {
             return _width;
         }
+
+        public override string ToString()
+        {
+            return $"{_length} long, and {_width} wide";
+        }
     }
 }

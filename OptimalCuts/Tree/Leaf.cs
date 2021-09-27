@@ -77,12 +77,16 @@ namespace OptimalCuts.Tree
             else if (remainingWidth == 0)
             {
                 Panel p = new Panel(original._x1, arranged._y2, original._x2, original._y2);
+                // TODO: Hard-disable setFree() unless user wants to rotate?
+                // Console.WriteLine("Width causing freedom!");
                 p.SetFree(true);
                 return new Leaf(p);
             }
             else if (remainingLength == 0)
             {
                 Panel p = new Panel(arranged._x2, original._y1, original._x2, original._y2);
+                // TODO: Hard-disable setFree() unless user wants to rotate?
+                // Console.WriteLine("Length causing freedom!");
                 p.SetFree(true);
                 return new Leaf(p);
             }
